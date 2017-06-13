@@ -1,0 +1,1398 @@
+  19-ReactJS/1-Class-Content/19.5/Activities/01-Component-Filter-Map/Solved/app/components/Container.js   0 → 100644  View file @80a73fc
+import React from "react";
+
+// Our Container component's only purpose will be to hold and center the rest of our content
+// props.children will be substituted for any nested components deployed
+const Container = props => (
+  <div style={styles.containerStyle} className="container">
+    <div className="row">
+      <div className="col-md-6 col-md-offset-3">
+        {props.children}
+      </div>
+    </div>
+  </div>
+);
+
+// An object we'll use to apply inline styles to this component
+const styles = {
+  containerStyle: {
+    marginTop: 50,
+    textAlign: "center"
+  }
+};
+
+// Exporting this component as the default (only) export
+export default Container;
+  19-ReactJS/1-Class-Content/19.5/Activities/01-Component-Filter-Map/Solved/app/components/ListContainer.js   0 → 100644  View file @80a73fc
+import React, { Component } from "react";
+
+// Importing our listItem component
+import ListItem from "./ListItem";
+
+// Importing an array of grocery data to use
+import groceries from "../../groceries";
+
+class ListContainer extends Component {
+  // Defining a constructor method where we set our initial state
+  constructor() {
+    // Calling super() here before we start assigning values
+    super();
+    // Setting this.state.groceries to our groceries array we imported
+    this.state = {
+      groceries
+    };
+  }
+  renderList() {
+    // Getting an array of only purchased items
+    const filteredList = this.state.groceries.filter(item => item.purchased === true);
+    // Mapping and through our filteredList and returning one
+    // ListItem component with the list object passed through as props
+    return filteredList.map(item => (
+      <ListItem key={item.id}>
+        {item.text}
+      </ListItem>
+      ));
+  }
+  render() {
+    // Run {this.renderList()} inside the div to return the result of the method
+    return (
+      <div className="text-center">
+        <h1>Purchased Groceries</h1>
+        <ul className="list-group">
+          {this.renderList()}
+        </ul>
+      </div>
+    );
+  }
+}
+
+// Exporting this component as the default (only) export
+export default ListContainer;
+  19-ReactJS/1-Class-Content/19.5/Activities/01-Component-Filter-Map/Solved/app/components/ListItem.js   0 → 100644  View file @80a73fc
+import React from "react";
+
+const ListItem = (props) => {
+  // Rendering an li tag with props.children between the tags (grocery text)
+  return (
+    <li className="list-group-item">
+      {props.children}
+    </li>
+  );
+};
+
+// Exporting this component as the default (only) export
+export default ListItem;
+  19-ReactJS/1-Class-Content/19.5/Activities/01-Component-Filter-Map/Solved/demo.png   0 → 100644 View file @80a73fc
+
+135 KB
+  19-ReactJS/1-Class-Content/19.5/Activities/01-Component-Filter-Map/Solved/groceries.js   0 → 100644  View file @80a73fc
+module.exports = [
+  {
+    id: "cww10l1e8hokult6jq0k9",
+    text: "A dozen eggs",
+    purchased: true
+  },
+  {
+    id: "68tcvygn9wrjoz6qd7vi",
+    text: "Coffee",
+    purchased: false
+  },
+  {
+    id: "qa0pz28jmtz94vj4kuik9",
+    text: "Gallon of Milk",
+    purchased: true
+  },
+  {
+    id: "tm5oxvlev8tol5zh0k9",
+    text: "Loaf of Bread",
+    purchased: true
+  },
+  {
+    id: "8bfxjtrbcbx0opjbgldi",
+    text: "Cheese",
+    purchased: false
+  }
+];
+  19-ReactJS/1-Class-Content/19.5/Activities/01-Component-Filter-Map/Solved/package.json   0 → 100644  View file @80a73fc
+{
+  "name": "class-components",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "dev": "webpack -w",
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "webpack": "^1.14.0"
+  },
+  "dependencies": {
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1"
+  }
+}
+  19-ReactJS/1-Class-Content/19.5/Activities/01-Component-Filter-Map/Solved/public/bundle.js   0 → 100644  View file @80a73fc
+This diff could not be displayed because it is too large.
+  19-ReactJS/1-Class-Content/19.5/Activities/01-Component-Filter-Map/Solved/public/index.html   0 → 100644  View file @80a73fc
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>LearnReact!</title>
+
+	<!-- Here we include bootstrap. This will be made available to all of the generated HTML/JS that React generates-->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.css">
+</head>
+
+<body>
+	
+	<!-- This is where React will deploy the contents it generates -->
+	<div id="app"></div>
+
+	<!-- All of our JS code will be transpiled into this bundle.js file -->
+	<script src="bundle.js"></script>
+	
+</body>
+</html>
+\ No newline at end of file
+  19-ReactJS/1-Class-Content/19.5/Activities/01-Component-Filter-Map/Solved/webpack.config.js   0 → 100644  View file @80a73fc
+module.exports = {
+
+  // This is the entry point or start of our react applicaton
+  entry: "./app/app.js",
+
+  // The plain compiled Javascript will be output into this file
+  output: {
+    filename: "public/bundle.js"
+  },
+
+  // This section desribes the transformations we will perform
+  module: {
+    loaders: [
+      {
+        // Only working with files that in in a .js or .jsx extension
+        test: /\.jsx?$/,
+        // Webpack will only process files in our app folder. This avoids processing
+        // node modules and server files unnecessarily
+        include: /app/,
+        loader: "babel",
+        query: {
+          // These are the specific transformations we'll be using.
+          presets: ["react", "es2015"]
+        }
+      }
+    ]
+  },
+  // This lets us debug our react code in chrome dev tools. Errors will have lines and file names
+  // Without this the console says all errors are coming from just coming from bundle.js
+  devtool: "eval-source-map"
+};
+  19-ReactJS/1-Class-Content/19.5/Activities/01-Component-Filter-Map/Unsolved/app/App.js   0 → 100644  View file @80a73fc
+// Include the Main React Dependencies
+import React from "react";
+import ReactDOM from "react-dom";
+
+// Including our ListContainer and Container components
+import ListContainer from "./components/ListContainer";
+import Container from "./components/Container";
+
+// Creating an App component which renders a ListContainer inside of a Container
+const App = () => (
+  <Container>
+    <ListContainer />
+  </Container>
+);
+
+ReactDOM.render(<App />, document.getElementById("app"));
+  19-ReactJS/1-Class-Content/19.5/Activities/02-Concat-Intro/Solved/concatSolved.js   0 → 100644  View file @80a73fc
+const appointments = [
+  "7:00 AM",
+  "7:30 AM",
+  "8:00 AM",
+  "9:30 AM",
+  "11:00 AM",
+  "12:00 PM"
+];
+
+// When passed any number of arguments, concat will create a new array
+// with the contents of the original array followed by the arguments
+const updatedAppointments = appointments.concat("12:30 PM", "1:00 PM");
+
+console.log(updatedAppointments);
+
+const candies = ["Starbursts", "Sweedish Fish", "Sour Patch Kids"];
+
+const chocolates = ["Hersheys", "Crunch Bar", "Twix"];
+
+// When passed an array as an argument, concat will create a new array,
+// destructure the passed array, and add the elements of the passed array
+// to the end of the new array
+
+// TDLR it will combine both arrays into a new array
+const sweets = candies.concat(chocolates);
+
+console.log(sweets);
+
+let oneThroughTen = [1, 2, 3, 4];
+
+// We can update an existing array by assigning it the returned value of the concat method
+oneThroughTen = oneThroughTen.concat(5, 6, 7, 8, 9, 10);
+
+console.log(oneThroughTen);
+  19-ReactJS/1-Class-Content/19.5/Activities/03-React-State-Concat/Solved/app/App.js   0 → 100644  View file @80a73fc
+// Include the Main React Dependencies
+import React from "react";
+import ReactDOM from "react-dom";
+
+// Including our ListContainer and Container components
+import ListContainer from "./components/ListContainer";
+import Container from "./components/Container";
+
+// Creating an App component which renders a ListContainer inside of a Container
+const App = () => (
+  <Container>
+    <ListContainer />
+  </Container>
+);
+
+ReactDOM.render(<App />, document.getElementById("app"));
+  19-ReactJS/1-Class-Content/19.5/Activities/03-React-State-Concat/Solved/app/components/Container.js   0 → 100644  View file @80a73fc
+import React from "react";
+
+// Our Container component's only purpose will be to hold and center the rest of our content
+// props.children will be substituted for any nested components deployed
+const Container = props => (
+  <div style={styles.containerStyle} className="container">
+    <div className="row">
+      <div className="col-md-6 col-md-offset-3">
+        {props.children}
+      </div>
+    </div>
+  </div>
+);
+
+// An object we'll use to apply inline styles to this component
+const styles = {
+  containerStyle: {
+    marginTop: 50,
+    textAlign: "center"
+  }
+};
+
+// Exporting this component as the default (only) export
+export default Container;
+  19-ReactJS/1-Class-Content/19.5/Activities/03-React-State-Concat/Solved/app/components/InputBox.js   0 → 100644  View file @80a73fc
+import React, { Component } from "react";
+
+class InputBox extends Component {
+  constructor() {
+    // We need to call super before we do anything in the constructor
+    super();
+    // Setting the intial state, binding our custom method to the class
+    this.state = { inputValue: "" };
+    // Binding handleButtonClick and handleInputChange here since we'll be passing them
+    // as callback functions
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleButtonClick = this.handleButtonClick.bind(this);
+  }
+  handleInputChange(event) {
+    // Limiting the maximum length of the text in the textarea
+    const newValue = event.target.value.substring(0, 140);
+    // Storing the new textArea value to state
+    this.setState({
+      inputValue: newValue
+    });
+  }
+  handleButtonClick() {
+    this.props.addComment(this.state.inputValue);
+    this.setState({ inputValue: "" });
+  }
+  render() {
+    return (
+      <div className="form-group">
+        <label style={styles.labelStyle} htmlFor="input-box">
+          Leave a comment
+        </label>
+        <textarea
+          style={{ resize: "none" }}
+          onChange={this.handleInputChange}
+          value={this.state.inputValue}
+          placeholder="Write your comment here"
+          className="form-control"
+          id="input-box"
+          rows="3"
+        />
+        <button
+          style={styles.btnStyle}
+          onClick={this.handleButtonClick}
+          className="btn btn-success"
+        >
+          Submit
+        </button>
+      </div>
+    );
+  }
+}
+
+const styles = {
+  btnStyle: {
+    float: "right",
+    marginTop: 10
+  },
+  labelStyle: {
+    float: "left",
+    marginBottom: 15
+  }
+};
+
+export default InputBox;
+  19-ReactJS/1-Class-Content/19.5/Activities/03-React-State-Concat/Solved/app/components/ListContainer.js   0 → 100644  View file @80a73fc
+import React, { Component } from "react";
+
+// Importing our listItem component
+import ListItem from "./ListItem";
+
+// Importing our InputBox component
+import InputBox from "./InputBox";
+
+// currentId will be incremented and used as a new unique id each time one is needed
+let currentId = 0;
+
+class ListContainer extends Component {
+  // Initializing an array for holding comments on state
+  constructor() {
+    super();
+    this.state = {
+      comments: [
+        {
+          id: 0,
+          text: "React is awesome!"
+        }
+      ]
+    };
+    // Binding addComment method to this component, since we'll be passing it to
+    // the InputBox component
+    this.addComment = this.addComment.bind(this);
+  }
+  addComment(text) {
+    // addComment expects a new comment's text
+    // Creating an object to represent our new comment
+    // Making sure the comment has a unique id
+    const newComment = {
+      id: ++currentId,
+      text
+    };
+    // concat returns a brand new array with the newComment added on
+    // We set this.state.comments to this new array
+    this.setState({
+      comments: this.state.comments.concat(newComment)
+    });
+  }
+  renderList() {
+    return this.state.comments.map(item => (
+      <ListItem key={item.id}>
+        {item.text}
+      </ListItem>
+    ));
+  }
+  render() {
+    return (
+      <div>
+        <InputBox addComment={this.addComment} />
+        <ul style={styles.listGroupStyle} className="list-group">
+          {this.renderList()}
+        </ul>
+      </div>
+    );
+  }
+}
+
+const styles = {
+  listGroupStyle: {
+    marginTop: 80
+  }
+};
+
+// Exporting this component as the default (only) export
+export default ListContainer;
+  19-ReactJS/1-Class-Content/19.5/Activities/03-React-State-Concat/Solved/app/components/ListItem.js   0 → 100644  View file @80a73fc
+import React from "react";
+
+// Rendering an li tag with props.children between the tags (grocery text)
+const ListItem = props => (
+  <li style={{ textAlign: "left" }} className="list-group-item">
+    {props.children}
+  </li>
+);
+
+// Exporting this component as the default (only) export
+export default ListItem;
+  19-ReactJS/1-Class-Content/19.5/Activities/03-React-State-Concat/Solved/package.json   0 → 100644  View file @80a73fc
+{
+  "name": "class-components",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "dev": "webpack -w",
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "webpack": "^1.14.0"
+  },
+  "dependencies": {
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1"
+  }
+}
+  19-ReactJS/1-Class-Content/19.5/Activities/03-React-State-Concat/Solved/public/bundle.js   0 → 100644  View file @80a73fc
+This diff could not be displayed because it is too large.
+  19-ReactJS/1-Class-Content/19.5/Activities/03-React-State-Concat/Solved/public/index.html   0 → 100644  View file @80a73fc
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>LearnReact!</title>
+
+	<!-- Here we include bootstrap. This will be made available to all of the generated HTML/JS that React generates-->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.css">
+</head>
+
+<body>
+	
+	<!-- This is where React will deploy the contents it generates -->
+	<div id="app"></div>
+
+	<!-- All of our JS code will be transpiled into this bundle.js file -->
+	<script src="bundle.js"></script>
+	
+</body>
+</html>
+\ No newline at end of file
+  19-ReactJS/1-Class-Content/19.5/Activities/03-React-State-Concat/Solved/webpack.config.js   0 → 100644  View file @80a73fc
+module.exports = {
+
+  // This is the entry point or start of our react applicaton
+  entry: "./app/app.js",
+
+  // The plain compiled Javascript will be output into this file
+  output: {
+    filename: "public/bundle.js"
+  },
+
+  // This section desribes the transformations we will perform
+  module: {
+    loaders: [
+      {
+        // Only working with files that in in a .js or .jsx extension
+        test: /\.jsx?$/,
+        // Webpack will only process files in our app folder. This avoids processing
+        // node modules and server files unnecessarily
+        include: /app/,
+        loader: "babel",
+        query: {
+          // These are the specific transformations we'll be using.
+          presets: ["react", "es2015"]
+        }
+      }
+    ]
+  },
+  // This lets us debug our react code in chrome dev tools. Errors will have lines and file names
+  // Without this the console says all errors are coming from just coming from bundle.js
+  devtool: "eval-source-map"
+};
+  19-ReactJS/1-Class-Content/19.5/Activities/04-Conditional-Rendering/Solved/app/App.js   0 → 100644  View file @80a73fc
+// Include the Main React Dependencies
+import React from "react";
+import ReactDOM from "react-dom";
+
+// Including our Panel and Container components
+import Panel from "./components/Panel";
+import Container from "./components/Container";
+
+// Creating an App component which renders a Panel inside of a Container
+const App = () => (
+  <Container>
+    <Panel />
+  </Container>
+);
+
+ReactDOM.render(<App />, document.getElementById("app"));
+  19-ReactJS/1-Class-Content/19.5/Activities/04-Conditional-Rendering/Solved/app/components/Container.js   0 → 100644  View file @80a73fc
+import React from "react";
+
+// Our Container component's only purpose will be to hold and center the rest of our content
+// props.children will be substituted for any nested components deployed
+const Container = props => (
+  <div style={styles.containerStyle} className="container">
+    <div className="row">
+      <div className="col-md-6 col-md-offset-3">
+        {props.children}
+      </div>
+    </div>
+  </div>
+);
+
+// An object we'll use to apply inline styles to this component
+const styles = {
+  containerStyle: {
+    marginTop: 50,
+    textAlign: "center"
+  }
+};
+
+// Exporting this component as the default (only) export
+export default Container;
+  19-ReactJS/1-Class-Content/19.5/Activities/04-Conditional-Rendering/Solved/app/components/Dropdown.js   0 → 100644  View file @80a73fc
+import React, { Component } from "react";
+
+class Dropdown extends Component {
+  constructor() {
+    super();
+    // This component has an "open" state that's either true or false
+    this.state = {
+      open: false
+    };
+    // Binding or custom methods to this class to preserve the "this" keyword.
+    // handleDropdownSelect gets passed as a callback and toggleDropdown gets called from inside handleDropdownSelect
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.handleDropdownSelect = this.handleDropdownSelect.bind(this);
+  }
+  // This method will toggle this component's "open" state
+  toggleDropdown() {
+    this.setState({
+      open: !this.state.open
+    });
+  }
+  // This method calls the parent component's (Panel's) handleDropdownSelect method
+  handleDropdownSelect(option) {
+    this.props.handleSelect(option);
+    // Then it closes the dropdown
+    this.toggleDropdown();
+  }
+  // renderList returns one li tag for each option prop we're passed
+  // Using option.value ("SHOW_CAT", "SHOW_LOREM", etc)
+  // If we were dynamically adding and removing these li tags, we'd worry about
+  // using a uuid. No chance of name collisions here.
+  renderList() {
+    return this.props.options.map(option => (
+      <li
+        onClick={() => this.handleDropdownSelect(option)}
+        key={option.value}
+      >
+        <a>{option.text}</a>
+      </li>
+    ));
+  }
+  // If our component's open state is true, give the dropdown div a class of "open"
+  // otherwise the "open" class is removed. This lets us toggle our dropdown open and
+  // closed without jQuery
+  render() {
+    return (
+      <div
+        style={this.props.style}
+        className={`dropdown ${this.state.open ? "open" : null}`}
+      >
+        <button
+          onClick={this.toggleDropdown}
+          className="btn btn-default dropdown-toggle"
+          type="button"
+          id="dropdown"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="true"
+        >
+          {this.props.selected.text}
+          <span className="caret"></span>
+        </button>
+        <ul className="dropdown-menu" aria-labelledby="dropdown">
+          {/* Here we render all of our li option tags */}
+          {this.renderList()}
+        </ul>
+      </div>
+    );
+  }
+}
+
+export default Dropdown;
+  19-ReactJS/1-Class-Content/19.5/Activities/04-Conditional-Rendering/Solved/app/components/Panel.js   0 → 100644  View file @80a73fc
+import React, { Component } from "react";
+
+// Importing our dropdown component
+import Dropdown from "./Dropdown";
+
+// Defining a list of dropwdown options here
+const dropdownOptions = [
+  {
+    text: "Show Lorem",
+    value: "SHOW_LOREM"
+  }, {
+    text: "Show Cat Picture",
+    value: "SHOW_CAT"
+  }, {
+    text: "Show Nothing",
+    value: "SHOW_NONE"
+  }
+];
+
+
+class Panel extends Component {
+  // Initializing our dropdownOptions on state, setting a default selected option
+  // Also setting all of our possible options using the dropdownOptions variable
+  constructor() {
+    super();
+    this.state = {
+      dropdownOptions,
+      selected: {
+        text: "Show Lorem",
+        value: "SHOW_LOREM"
+      }
+    };
+    // Binding our custom methods to our class
+    this.handleDropdownSelect = this.handleDropdownSelect.bind(this);
+  }
+  // This function is called by the Dropdown component whenever an option is chosen
+  handleDropdownSelect(option) {
+    // Setting this.state.selected to the dropdown option the user clicks
+    this.setState({ selected: option });
+  }
+  renderItems() {
+    // Destructuring the value property off of this.state.selected for easier access
+    // Naming this new variable selectedValue for clarity
+    const { value: selectedValue } = this.state.selected;
+    // If this.state.selected.value is "SHOW_LOREM", then return a paragraph of lorem ipsum
+    if (selectedValue === "SHOW_LOREM") {
+      return (
+        <p>Consectetur tempor elit ullamco voluptate minim aliqua sit quis veniam veniam sunt.
+         Anim ipsum in laborum non velit magna Lorem.
+         Nisi nisi reprehenderit est cillum magna excepteur culpa.
+        </p>
+      );
+    }
+    // If this.state.selected.value is "SHOW_CAT", then return an image of a cat
+    else if (selectedValue === "SHOW_CAT") {
+      return (
+        <img
+          width="400"
+          alt="Funny Cat"
+          src="https://i.ytimg.com/vi/tntOCGkgt98/maxresdefault.jpg"
+        />
+      );
+    }
+    // The only other option is "SHOW NOTHING"
+    return null;
+  }
+  render() {
+    return (
+      <div className="panel panel-default">
+        <div
+          style={styles.panelHeadingStyle}
+          className="panel-heading"
+        >
+          Choose One!
+          <Dropdown
+            style={styles.dropdownStyle}
+            options={this.state.dropdownOptions}
+            selected={this.state.selected}
+            handleSelect={this.handleDropdownSelect}  
+          />
+        </div>
+        <div className="panel-body">
+          {/*
+          The renderItems method returns different JSX depending on our
+          component's state
+          */}
+          {this.renderItems()}
+        </div>
+      </div>
+    );
+  }
+}
+
+const styles = {
+  dropdownStyle: {
+    float: "right",
+    bottom: 10
+  },
+  panelHeadingStyle: {
+    padding: 20
+  }
+};
+
+export default Panel;
+  19-ReactJS/1-Class-Content/19.5/Activities/04-Conditional-Rendering/Solved/package.json   0 → 100644  View file @80a73fc
+{
+  "name": "class-components",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "dev": "webpack -w",
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "webpack": "^1.14.0"
+  },
+  "dependencies": {
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1"
+  }
+}
+  19-ReactJS/1-Class-Content/19.5/Activities/04-Conditional-Rendering/Solved/public/bundle.js   0 → 100644  View file @80a73fc
+This diff could not be displayed because it is too large.
+  19-ReactJS/1-Class-Content/19.5/Activities/04-Conditional-Rendering/Solved/public/index.html   0 → 100644  View file @80a73fc
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>LearnReact!</title>
+
+	<!-- Here we include bootstrap. This will be made available to all of the generated HTML/JS that React generates-->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.css">
+</head>
+
+<body>
+	
+	<!-- This is where React will deploy the contents it generates -->
+	<div id="app"></div>
+
+	<!-- All of our JS code will be transpiled into this bundle.js file -->
+	<script src="bundle.js"></script>
+	
+</body>
+</html>
+\ No newline at end of file
+  19-ReactJS/1-Class-Content/19.5/Activities/04-Conditional-Rendering/Solved/webpack.config.js   0 → 100644  View file @80a73fc
+module.exports = {
+
+  // This is the entry point or start of our react applicaton
+  entry: "./app/app.js",
+
+  // The plain compiled Javascript will be output into this file
+  output: {
+    filename: "public/bundle.js"
+  },
+
+  // This section desribes the transformations we will perform
+  module: {
+    loaders: [
+      {
+        // Only working with files that in in a .js or .jsx extension
+        test: /\.jsx?$/,
+        // Webpack will only process files in our app folder. This avoids processing
+        // node modules and server files unnecessarily
+        include: /app/,
+        loader: "babel",
+        query: {
+          // These are the specific transformations we'll be using.
+          presets: ["react", "es2015"]
+        }
+      }
+    ]
+  },
+  // This lets us debug our react code in chrome dev tools. Errors will have lines and file names
+  // Without this the console says all errors are coming from just coming from bundle.js
+  devtool: "eval-source-map"
+};
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/app/App.js   0 → 100644  View file @80a73fc
+// Include the Main React Dependencies
+import React from "react";
+import ReactDOM from "react-dom";
+import routes from "./config/routes";
+
+ReactDOM.render(routes, document.getElementById("app"));
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/app/components/Favorites.js   0 → 100644  View file @80a73fc
+import React, { Component } from "react";
+import Panel from "./common/Panel";
+import API from "../utils/API";
+
+class Favorites extends Component {
+  constructor() {
+    super();
+    this.state = {
+      quotes: []
+    };
+    // Binding getQuotes to this component since we'll be passing this method to 
+    // other components to use
+    this.getQuotes = this.getQuotes.bind(this);
+  }
+  // Getting all quotes once the component has mounted
+  componentDidMount() {
+    this.getQuotes();
+  }
+  getQuotes() {
+    API.getQuotes().then((res) => {
+      const favoriteQuotes = res.data.filter(quote => quote.favorited);
+      this.setState({ quotes: favoriteQuotes });
+    });
+  }
+  // A helper method for rendering one panel for each quote
+  renderQuotes() {
+    return this.state.quotes.map(quote => (
+      <Panel
+        quote={quote}
+        key={quote._id}
+        getQuotes={this.getQuotes}
+      />
+    ));
+  }
+  render() {
+    return (
+      <div>
+        <div className="jumbotron text-center">
+          <h1>Your Favorite Quotes</h1>
+          <p>Your very best quotes.</p>
+        </div>
+        <div className="container">
+        <div className="row">
+          {this.renderQuotes()}
+        </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default Favorites;
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/app/components/Home.js   0 → 100644  View file @80a73fc
+import React, { Component } from "react";
+import Panel from "./common/Panel";
+import QuoteForm from "./common/QuoteForm";
+import API from "../utils/API";
+
+class Home extends Component {
+  constructor() {
+    super();
+    this.state = {
+      quotes: []
+    };
+    // Binding getQuotes to our component since we'll be passing this
+    // method to child components
+    this.getQuotes = this.getQuotes.bind(this);
+  }
+  // Getting all quotes when the component mounts
+  componentDidMount() {
+    this.getQuotes();
+  }
+  getQuotes() {
+    API.getQuotes().then((res) => {
+      this.setState({ quotes: res.data });
+    });
+  }
+  // A helper method for rendering one panel for each quote
+  renderQuotes() {
+    return this.state.quotes.map(quote => (
+      <Panel
+        quote={quote}
+        key={quote._id}
+        getQuotes={this.getQuotes}
+      />
+    ));
+  }
+  render() {
+    return (
+      <div className="container">
+        <div className="row">
+          <QuoteForm
+            getQuotes={this.getQuotes}
+          />
+        </div>
+        <div className="row">
+          <hr />
+          {this.renderQuotes()}
+        </div>
+      </div>
+    );
+  }
+}
+
+export default Home;
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/app/components/Main.js   0 → 100644  View file @80a73fc
+import React from "react";
+import Navbar from "./common/Navbar";
+import Footer from "./common/Footer";
+
+const Main = props => (
+  <div>
+    <Navbar />
+    {props.children}
+    <Footer />
+  </div>
+);
+
+export default Main;
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/app/components/common/Footer.js   0 → 100644  View file @80a73fc
+import React from "react";
+
+const Footer = () => (
+  <footer className="footer">
+    <hr />
+    <p className="pull-right">
+      <i className="fa fa-github" aria-hidden="true" />
+        &nbsp;&nbsp; Proudly built using React.js
+    </p>
+  </footer>
+);
+
+export default Footer;
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/app/components/common/Navbar.js   0 → 100644  View file @80a73fc
+import React from "react";
+import { Link } from "react-router";
+
+const Navbar = () => (
+  <nav style={{ marginBottom: 0 }} className="navbar navbar-inverse">
+    <div className="container-fluid">
+      <div className="navbar-header">
+        <Link className="navbar-brand" to="/">Quotes App</Link>
+      </div>
+      <ul className="nav navbar-nav">
+        <li className={location.pathname === "/" && "active"}>
+          <Link to="/">Home</Link>
+        </li>
+        <li className={location.pathname === "/favorites" && "active"}>
+          <Link to="/favorites">Favorites</Link>
+        </li>
+      </ul>
+    </div>
+  </nav>
+);
+
+export default Navbar;
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/app/components/common/Panel.js   0 → 100644  View file @80a73fc
+import React, { Component } from "react";
+import API from "../../utils/API";
+
+class Panel extends Component {
+  // favoriteQuote toggles a quote's favorite status in the db and then
+  // reloads all quotes in our app
+  favoriteQuote(quote) {
+    API.favoriteQuote(quote).then(this.props.getQuotes);
+  }
+   // deleteQuote deletes a quote in the db and then
+  // reloads all quotes in our app
+  deleteQuote(id) {
+    API.deleteQuote(id).then(this.props.getQuotes);
+  }
+  render() {
+    return (
+      <div className="col-md-3 col-sm-6">
+        <div className="panel panel-default">
+          <div className="panel-body">
+            <i
+              onClick={() => this.favoriteQuote(this.props.quote)}
+              style={styles.favoriteStyle}
+              className={this.props.quote.favorited ? "fa fa-star gold" : "fa fa-star-o"}
+              aria-hidden="true"
+            />
+            <i
+              onClick={() => this.deleteQuote(this.props.quote._id)}
+              style={styles.deleteStyle}
+              className="fa fa-trash-o"
+              aria-hidden="true"
+            />
+            {this.props.quote.text}
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+const styles = {
+  favoriteStyle: {
+    cursor: "pointer",
+    marginRight: 5,
+    float: "left"
+  },
+  deleteStyle: {
+    cursor: "pointer",
+    marginLeft: 5,
+    color: "red",
+    float: "right"
+  }
+};
+
+export default Panel;
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/app/components/common/QuoteForm.js   0 → 100644  View file @80a73fc
+import React, { Component } from "react";
+import API from "../../utils/API";
+
+class QuoteForm extends Component {
+  constructor() {
+    super();
+    this.state = {
+      inputValue: ""
+    };
+    // Binding handleInputChange and handleButtonClick since we'll be passing them as
+    // callbacks and 'this' will change otherwise
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleButtonClick = this.handleButtonClick.bind(this);
+  }
+  handleInputChange(event) {
+    this.setState({ inputValue: event.target.value });
+  }
+  handleButtonClick() {
+    const newQuote = this.state.inputValue;
+    API.saveQuote(newQuote).then(this.props.getQuotes);
+    this.setState({ inputValue: "" });
+  }
+  render() {
+    return (
+      <div className="col-md-6 col-md-offset-3">
+        <div style={styles.formStyle} className="form-group">
+          <label htmlFor="input-box">
+            Add a quote
+          </label>
+          <textarea
+            style={{
+              resize: "none"
+            }}
+            onChange={this.handleInputChange}
+            value={this.state.inputValue}
+            placeholder="Add a new quote here!"
+            className="form-control"
+            id="input-box"
+            rows="3"
+          />
+          <button
+            onClick={this.handleButtonClick}
+            className="btn btn-success"
+            style={styles.buttonStyle}
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
+
+const styles = {
+  buttonStyle: {
+    float: "right",
+    marginTop: 10
+  },
+  formStyle: {
+    marginBottom: 60,
+    marginTop: 60
+  }
+};
+
+export default QuoteForm;
+\ No newline at end of file
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/app/config/routes.js   0 → 100644  View file @80a73fc
+import React from "react";
+import { Route, IndexRoute, Router, browserHistory } from "react-router";
+
+import Main from "../components/Main";
+import Favorites from "../components/Favorites";
+import Home from "../components/Home";
+
+const routes = (
+  <Router history={browserHistory}>
+    <Route path="/" component={Main}>
+    <Route path="favorites" component={Favorites} />
+    <IndexRoute component={Home} />
+    </Route>
+  </Router>
+);
+
+export default routes;
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/app/utils/API.js   0 → 100644  View file @80a73fc
+import axios from "axios";
+
+const API = {
+  // Retrieves all quotes from the db
+  getQuotes: function() {
+    return axios.get("/api/quotes");
+  },
+  // Saves a new quote to the db
+  saveQuote: function(text) {
+    return axios.post("/api/quotes", { text });
+  },
+  // Deletes a quote from the db
+  deleteQuote: function(id) {
+    return axios.delete(`/api/quotes/${id}`);
+  },
+  // Toggles a quote's favorite property in the db
+  favoriteQuote: function(quote) {
+    quote.favorited = !quote.favorited;
+    const { _id, favorited } = quote;
+    return axios.patch(`/api/quotes/${_id}`, { favorited });
+  }
+};
+
+export default API;
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/controllers/quotesController.js   0 → 100644  View file @80a73fc
+var Quote = require("../models/quote");
+
+module.exports = {
+  // This method handles retrieving quotes from the db
+  index: function(req, res) {
+    var query;
+    if (req.query) {
+      query = req.query;
+    }
+    else {
+      query = req.params.id ? { _id: req.params.id } : {};
+    }
+    Quote.find(query)
+      .then(function(doc) {
+        res.json(doc);
+      }).catch(function(err) {
+        res.json(err);
+      });
+  },
+  // This method handles creating new quotes
+  create: function(req, res) {
+    Quote.create(req.body).then(function(doc) {
+      res.json(doc);
+    }).catch(function(err) {
+      res.json(err);
+    });
+  },
+  // This method handles updating quotes
+  update: function(req, res) {
+    Quote.update({
+      _id: req.params.id
+    },
+      req.body
+    ).then(function(doc) {
+      res.json(doc);
+    }).catch(function(err) {
+      res.json(err);
+    });
+  },
+  // This method handles deleting quotes
+  destroy: function(req, res) {
+    Quote.remove({
+      _id: req.params.id
+    }).then(function(doc) {
+      res.json(doc);
+    }).catch(function(err) {
+      res.json(err);
+    });
+  }
+};
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/models/quote.js   0 → 100644  View file @80a73fc
+var mongoose = require("mongoose");
+
+var Schema = mongoose.Schema;
+
+var quoteSchema = new Schema({
+  text: String,
+  favorited: {
+    type: Boolean,
+    default: false
+  }
+});
+
+var Quote = mongoose.model("Quote", quoteSchema);
+
+module.exports = Quote;
+\ No newline at end of file
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/package.json   0 → 100644  View file @80a73fc
+{
+  "name": "Solved",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "webpack -w",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.15.3",
+    "bluebird": "^3.4.7",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongoose": "^4.7.5",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "react-router": "^3.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "webpack": "^1.14.0"
+  }
+}
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/public/bundle.js   0 → 100644  View file @80a73fc
+This diff could not be displayed because it is too large.
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/public/css/style.css   0 → 100644  View file @80a73fc
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.gold {
+  color: gold;
+}
+
+.quote {
+  padding-top: 20px;
+}
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/public/index.html   0 → 100644  View file @80a73fc
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>LearnReact!</title>
+	<!-- Here we include bootstrap and font-awesome. These will be made available to all of the generated HTML/JS that React generates-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.css">
+	<link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+	
+	<!-- This is where React will deploy the contents it generates -->
+	<div id="app"></div>
+
+	<!-- All of our JS code will be transpiled into this bundle.js file -->
+	<script src="bundle.js"></script>
+	
+</body>
+</html>
+\ No newline at end of file
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/routes/apiRoutes.js   0 → 100644  View file @80a73fc
+var express = require("express");
+
+var quotesController = require("../controllers/quotesController");
+
+var router = new express.Router();
+
+// Get all quotes (or optionally a specific quote with an id)
+router.get("/quotes/:id?", quotesController.index);
+// Create a new quote using data passed in req.body
+router.post("/quotes", quotesController.create);
+// Update an existing quote with a speicified id param, using data in req.body
+router.patch("/quotes/:id", quotesController.update);
+// Delete a specific quote using the id in req.params.id
+router.delete("/quotes/:id", quotesController.destroy);
+
+module.exports = router;
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/routes/routes.js   0 → 100644  View file @80a73fc
+var express = require("express");
+var path = require("path");
+
+var apiRoutes = require("./apiRoutes");
+
+var router = new express.Router();
+
+// Use the apiRoutes module for any routes starting with "/api"
+router.use("/api", apiRoutes);
+
+// Otherwise send all other requests the index.html page
+// React router will handle routing withing the app
+router.get("*", function(req, res) {
+  res.sendFile(path.join(__dirname, "../public/index.html"));
+});
+
+module.exports = router;
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/server.js   0 → 100644  View file @80a73fc
+// Require our dependecies
+var express = require("express");
+var mongoose = require("mongoose");
+var bluebird = require("bluebird");
+var bodyParser = require("body-parser");
+var routes = require("./routes/routes");
+
+// Set up a default port, configure mongoose, configure our middleware
+var PORT = process.env.PORT || 3000;
+mongoose.Promise = bluebird;
+var app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.static(__dirname + "/public"));
+app.use("/", routes);
+
+var db = process.env.MONGODB_URI || "mongodb://localhost/quotesApp";
+
+// Connect mongoose to our database
+mongoose.connect(db, function(error) {
+  // Log any errors connecting with mongoose
+  if (error) {
+    console.error(error);
+  }
+  // Or log a success message
+  else {
+    console.log("mongoose connection is successful");
+  }
+});
+
+// Start the server
+app.listen(PORT, function() {
+  console.log("Now listening on port %s! Visit localhost:%s in your browser.", PORT, PORT);
+});
+  19-ReactJS/1-Class-Content/19.5/Activities/05-Quotes-App/Solved/webpack.config.js   0 → 100644  View file @80a73fc
+module.exports = {
+
+  // This is the entry point or start of our react applicaton
+  entry: "./app/app.js",
+
+  // The plain compiled Javascript will be output into this file
+  output: {
+    filename: "public/bundle.js"
+  },
+
+  // This section desribes the transformations we will perform
+  module: {
+    loaders: [
+      {
+        // Only working with files that in in a .js or .jsx extension
+        test: /\.jsx?$/,
+        // Webpack will only process files in our app folder. This avoids processing
+        // node modules and server files unnecessarily
+        include: /app/,
+        loader: "babel",
+        query: {
+          // These are the specific transformations we'll be using.
+          presets: ["react", "es2015"]
+        }
+      }
+    ]
+  },
+  // This lets us debug our react code in chrome dev tools. Errors will have lines and file names
+  // Without this the console says all errors are coming from just coming from bundle.js
+  devtool: "eval-source-map"
+};
